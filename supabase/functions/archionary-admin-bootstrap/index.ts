@@ -20,7 +20,7 @@ Deno.serve(async(req:Request)=>{
  if(users.users.some(u=>u.email?.toLowerCase()===email))return reply({error:"The 001@nemo administrator account has already been created. Sign in instead."},409,origin);
  const {data,error}=await supabase.auth.admin.createUser({email,password,email_confirm:true});
  if(error||!data.user)return reply({error:error?.message||"Account creation failed."},400,origin);
- const {error:grantError}=await supabase.schema("private").from("archionary_admins").insert({user_id:data.user.id});
+ const {error:grantError}=await supabase.rpc("archionary_bootstrap_grant_admin",{target_user_id:data.user.id});
  if(grantError){await supabase.auth.admin.deleteUser(data.user.id);return reply({error:"Account created but administrator assignment failed; creation was rolled back."},500,origin);}
  return reply({success:true,message:"Administrator account created. You can now sign in."},200,origin);
 });
