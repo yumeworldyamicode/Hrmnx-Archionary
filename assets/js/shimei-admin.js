@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded',()=>{const buttons=document.querySelectorAll('.admin-tabs button');const panels=document.querySelectorAll('.admin-panel');buttons.forEach(b=>b.addEventListener('click',()=>{buttons.forEach(x=>x.classList.toggle('active',x===b));panels.forEach(p=>p.classList.toggle('active',p.id===b.dataset.panel));}));});
