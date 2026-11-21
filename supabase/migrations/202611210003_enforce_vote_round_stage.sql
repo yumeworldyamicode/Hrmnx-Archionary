@@ -1,0 +1,7 @@
+drop policy if exists shimei_votes_update_open_round on public.shimei_votes;
+create policy shimei_votes_update_open_round on public.shimei_votes for update to authenticated using(voter_id=(select auth.uid())) with check(
+ voter_id=(select auth.uid())
+ and exists(select 1 from public.shimei_rounds r where r.season_id=shimei_votes.season_id and r.round_number=shimei_votes.round_number and r.status='open' and (r.opens_at is null or r.opens_at<=now()) and (r.closes_at is null or r.closes_at>now()))
+ and exists(select 1 from public.shimei_entries e where e.id=shimei_votes.entry_id and e.season_id=shimei_votes.season_id and e.category_id=shimei_votes.category_id and e.eligible=true and e.approval_status='approved')
+ and ((shimei_votes.round_number=1 and exists(select 1 from public.shimei_seasons s where s.id=shimei_votes.season_id and s.status='first_vote')) or (shimei_votes.round_number=2 and exists(select 1 from public.shimei_seasons s where s.id=shimei_votes.season_id and s.status='final_vote') and exists(select 1 from public.shimei_nominations n where n.season_id=shimei_votes.season_id and n.category_id=shimei_votes.category_id and n.entry_id=shimei_votes.entry_id and n.nomination_status='published')))
+);
