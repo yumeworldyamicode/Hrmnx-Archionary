@@ -5,7 +5,8 @@ const categories=[{id:'person',label:'Person'},{id:'story',label:'Story'},{id:'p
 let season=null,rounds=[],user=null;
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const login=$('#admin-login-form'),loginMessage=$('#login-message');
-function message(s){loginMessage.textContent=s;}\nasync function audit(action,type,objectId,details={}){if(!user||!season)return;await db.from('shimei_admin_audit').insert({season_id:season.id,actor_id:user.id,action,object_type:type,object_id:objectId?String(objectId):null,details});}
+function message(s){loginMessage.textContent=s;} 
+async function audit(action,type,objectId,details={}){if(!user||!season)return;await db.from('shimei_admin_audit').insert({season_id:season.id,actor_id:user.id,action,object_type:type,object_id:objectId?String(objectId):null,details});}
 function adminOn(){ $('#login-panel').hidden=true;$('#admin-dashboard').hidden=false;$('#session-label').textContent='Signed in: '+(user?.email||user?.id); }
 function adminOff(){ $('#login-panel').hidden=false;$('#admin-dashboard').hidden=true; }
 function populate(sel){$(sel).innerHTML=categories.map(c=>'<option value="'+c.id+'">'+c.label+'</option>').join('');}
