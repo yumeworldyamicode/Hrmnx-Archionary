@@ -1,7 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 const ORIGIN="https://archionary.hrmnx.site";
-const headers=(origin:string)=>({"Access-Control-Allow-Origin":origin===ORIGIN?ORIGIN:ORIGIN,"Access-Control-Allow-Headers":"authorization, apikey, content-type","Access-Control-Allow-Methods":"POST, OPTIONS","Vary":"Origin"});
+const headers=(origin:string)=>({"Access-Control-Allow-Origin":origin===ORIGIN?ORIGIN:ORIGIN,"Access-Control-Allow-Headers":"authorization, apikey, content-type, x-client-info, x-supabase-api-version","Access-Control-Allow-Methods":"POST, OPTIONS","Vary":"Origin"});
 const reply=(data:unknown,status:number,origin:string)=>new Response(JSON.stringify(data),{status,headers:{...headers(origin),"Content-Type":"application/json"}});
 Deno.serve(async(req:Request)=>{
  const origin=req.headers.get("origin")||"";
